@@ -1,6 +1,5 @@
 #include "serverdialog.h"
 #include "loginserver.h"
-#include "revisedialog.h"
 #include "enrolldialog.h"
 #include <QApplication>
 #include <QSqlDatabase>
