@@ -10,7 +10,8 @@ EnrollDialog::EnrollDialog(QWidget *parent) :
     ui->idEdit->setPlaceholderText("请输入id:");
     ui->passwordEdit->setPlaceholderText("请输入密码:");
     ui->confirmPasswordEdit->setPlaceholderText("请确认密码:");
-    connect(ui->returnLoginButton, &QPushButton::clicked, this, &EnrollDialog::on_returnLoginButton_clicked);
+    //connect(ui->returnLoginButton, &QPushButton::clicked, this, &EnrollDialog::on_returnLoginButton_clicked);
+    //connect(ui->enrollButton, &QPushButton::clicked, this, &EnrollDialog::on_enrollButton_clicked);
 }
 
 EnrollDialog::~EnrollDialog()
@@ -22,10 +23,44 @@ void EnrollDialog::on_returnLoginButton_clicked()
     ui->idEdit->clear();
     ui->passwordEdit->clear();
     ui->confirmPasswordEdit->clear();
+    ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    ui->confirmPasswordEdit->setEchoMode(QLineEdit::Password);
     QWidget *parent = this->parentWidget(); // 获取父窗口
     if (parent)
     {
         parent->show(); // 显示父窗口
     }
     this->close(); // 关闭当前窗口
+}
+
+void EnrollDialog::on_enrollButton_clicked()
+{
+    QString id = ui->idEdit->text();
+    QString password = ui->passwordEdit->text();
+    QString confirmPassword = ui->confirmPasswordEdit->text();
+
+    if (id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        qDebug() << "请填写所有字段";
+        return;
+    }
+
+    if (password != confirmPassword) {
+        qDebug() << "两次输入的密码不一致";
+        return;
+    }
+    if (!ui->checkBox->isChecked()) {
+        qDebug() << "请勾选同意条款";
+        return;
+    }
+    QSqlQuery query;
+    query.prepare("INSERT INTO users (id, password) VALUES (:id, :password)");
+    query.bindValue(":id", id);
+    query.bindValue(":password", password);
+
+    if (query.exec()) {
+        qDebug() << "账号创建成功";
+        QMessageBox::information(this, "成功", "账号创建成功");
+    } else {
+        qDebug() << "账号创建失败: " << query.lastError().text();
+    }
 }

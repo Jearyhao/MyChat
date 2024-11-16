@@ -11,9 +11,10 @@ LoginServer::LoginServer(QWidget *parent) :
     ui->setupUi(this);
     ui->idEdit->setPlaceholderText("请输入管理员账号:");
     ui->passwordEdit->setPlaceholderText("请输入密码:");
-    connect(ui->loginButton, &QPushButton::clicked, this, &LoginServer::on_loginButton_clicked); // 连接信号和槽
-    connect(ui->enrollButton, &QPushButton::clicked, this, &LoginServer::on_enrollButton_clicked);
-    connect(ui->revisePasswordButton, &QPushButton::clicked, this, &LoginServer::on_revisePasswordButton_clicked);
+    ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    //connect(ui->loginButton, &QPushButton::clicked, this, &LoginServer::on_loginButton_clicked); // 连接信号和槽
+    //connect(ui->enrollButton, &QPushButton::clicked, this, &LoginServer::on_enrollButton_clicked);
+    //connect(ui->revisePasswordButton, &QPushButton::clicked, this, &LoginServer::on_revisePasswordButton_clicked);
 }
 
 LoginServer::~LoginServer()
@@ -31,6 +32,33 @@ LoginServer::~LoginServer()
 }
 void LoginServer::on_loginButton_clicked()
 {
+    QString id = ui->idEdit->text();
+    QString password = ui->passwordEdit->text();
+
+    if (id.isEmpty() || password.isEmpty()) {
+        qDebug() << "请填写账号和密码";
+        return;
+    }
+    QSqlQuery query;
+    query.prepare("SELECT password FROM users WHERE id = :id");
+    query.bindValue(":id", id);
+    if (!query.exec()) {
+        qDebug() << "查询失败: " << query.lastError().text();
+        return;
+    }
+    if (!query.next()) {
+        qDebug() << "账号不存在";
+        return;
+    }
+    QString storedPassword = query.value(0).toString();
+    if (storedPassword != password) {
+        qDebug() << "密码错误";
+        return;
+    }
+    if (!ui->checkBox->isChecked()) {
+        qDebug() << "请勾选同意条款";
+        return;
+    }
     if (!serverDialog) {
         serverDialog = new ServerDialog(this); // 创建ServerDialog窗口
     }

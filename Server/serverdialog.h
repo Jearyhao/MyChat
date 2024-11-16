@@ -6,7 +6,10 @@
 #include <QTcpSocket>
 #include <QDebug>
 #include <QTimer>
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QtSql>
+#include <QSqlError>
 QT_BEGIN_NAMESPACE
 namespace Ui { class ServerDialog; }
 QT_END_NAMESPACE

@@ -2,7 +2,12 @@
 #define REVISEDIALOG_H
 
 #include <QDialog>
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QtSql>
+#include <QSqlError>
+#include <QDebug>
+#include <QMessageBox>
 namespace Ui {
 class ReviseDialog;
 }
@@ -17,6 +22,8 @@ public:
 
 private slots:
     void on_returnLoginButton_clicked();
+
+    void on_reviseButton_clicked();
 
 private:
     Ui::ReviseDialog *ui;
