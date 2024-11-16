@@ -26,6 +26,7 @@ private slots:
     void on_loginButton_clicked();
     void on_enrollButton_clicked(); // 声明槽函数
     void on_revisePasswordButton_clicked();
+    void updateLoginButtonState();
 
 private:
     Ui::LoginServer *ui;

@@ -12,11 +12,22 @@ LoginServer::LoginServer(QWidget *parent) :
     ui->idEdit->setPlaceholderText("请输入管理员账号:");
     ui->passwordEdit->setPlaceholderText("请输入密码:");
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    ui->loginButton->setEnabled(false); // 初始时禁用登录按钮
+    
+    connect(ui->idEdit, &QLineEdit::textChanged, this, &LoginServer::updateLoginButtonState);
+    connect(ui->passwordEdit, &QLineEdit::textChanged, this, &LoginServer::updateLoginButtonState);
+    connect(ui->checkBox, &QCheckBox::stateChanged, this, &LoginServer::updateLoginButtonState);
     //connect(ui->loginButton, &QPushButton::clicked, this, &LoginServer::on_loginButton_clicked); // 连接信号和槽
     //connect(ui->enrollButton, &QPushButton::clicked, this, &LoginServer::on_enrollButton_clicked);
     //connect(ui->revisePasswordButton, &QPushButton::clicked, this, &LoginServer::on_revisePasswordButton_clicked);
 }
-
+void LoginServer::updateLoginButtonState()
+{
+    bool isIdFilled = !ui->idEdit->text().isEmpty();
+    bool isPasswordFilled = !ui->passwordEdit->text().isEmpty();
+    bool isCheckBoxChecked = ui->checkBox->isChecked();
+    ui->loginButton->setEnabled(isIdFilled && isPasswordFilled && isCheckBoxChecked);
+}
 LoginServer::~LoginServer()
 {
     delete ui;
@@ -30,6 +41,7 @@ LoginServer::~LoginServer()
         delete reviseDialog; // 确保删除ReviseDialog对象
     }
 }
+
 void LoginServer::on_loginButton_clicked()
 {
     QString id = ui->idEdit->text();
