@@ -9,13 +9,22 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    enrolldialog.cpp \
+    loginserver.cpp \
     main.cpp \
+    revisedialog.cpp \
     serverdialog.cpp
 
 HEADERS += \
+    enrolldialog.h \
+    loginserver.h \
+    revisedialog.h \
     serverdialog.h
 
 FORMS += \
+    enrolldialog.ui \
+    loginserver.ui \
+    revisedialog.ui \
     serverdialog.ui
 
 # Default rules for deployment.
