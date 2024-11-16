@@ -124,7 +124,7 @@
         </size>
        </property>
        <property name="text">
-        <string>请输入新的密码：</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -143,7 +143,7 @@
         </size>
        </property>
        <property name="text">
-        <string>请输入id:</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -178,7 +178,7 @@
         </size>
        </property>
        <property name="text">
-        <string>请确认新的密码：</string>
+        <string/>
        </property>
       </widget>
      </item>

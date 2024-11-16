@@ -9,7 +9,8 @@ LoginServer::LoginServer(QWidget *parent) :
     reviseDialog(nullptr) // 初始化指针
 {
     ui->setupUi(this);
-    qDebug() << "Connecting signals and slots";
+    ui->idEdit->setPlaceholderText("请输入管理员账号:");
+    ui->passwordEdit->setPlaceholderText("请输入密码:");
     connect(ui->loginButton, &QPushButton::clicked, this, &LoginServer::on_loginButton_clicked); // 连接信号和槽
     connect(ui->enrollButton, &QPushButton::clicked, this, &LoginServer::on_enrollButton_clicked);
     connect(ui->revisePasswordButton, &QPushButton::clicked, this, &LoginServer::on_revisePasswordButton_clicked);
@@ -38,7 +39,8 @@ void LoginServer::on_loginButton_clicked()
 }
 void LoginServer::on_enrollButton_clicked()
 {
-    qDebug() << "Enroll button clicked";
+    ui->idEdit->clear();
+    ui->passwordEdit->clear();
     if (!enrollDialog) {
         enrollDialog = new EnrollDialog(this); // 创建EnrollDialog窗口
     }
@@ -48,7 +50,8 @@ void LoginServer::on_enrollButton_clicked()
 
 void LoginServer::on_revisePasswordButton_clicked()
 {
-    qDebug()<<"call on_revisePasswordButton";
+    ui->idEdit->clear();
+    ui->passwordEdit->clear();
     if (!reviseDialog) {
         reviseDialog = new ReviseDialog(this); // 创建ReviseDialog窗口
     }
