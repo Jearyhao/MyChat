@@ -50,12 +50,9 @@ void ReviseDialog::on_reviseButton_clicked()
     QString newPassword = ui->passwordEdit_2->text();
     QString confirmPassword = ui->confirmPasswordEdit_2->text();
 
-    if (id.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-        qDebug() << "请填写所有字段";
-        return;
-    }
     if (newPassword != confirmPassword) {
         qDebug() << "两次输入的密码不一致";
+        QMessageBox::information(this, "失败", "两次输入的密码不一致");
         return;
     }
     QSqlQuery query;

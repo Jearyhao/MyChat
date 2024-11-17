@@ -6,6 +6,8 @@
 #include "enrolldialog.h" // 包含EnrollDialog的头文件
 #include "revisedialog.h" // 包含ReviseDialog的头文件
 #include <QDebug>
+#include <QMessageBox>
+
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QtSql>

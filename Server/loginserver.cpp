@@ -47,10 +47,6 @@ void LoginServer::on_loginButton_clicked()
     QString id = ui->idEdit->text();
     QString password = ui->passwordEdit->text();
 
-    if (id.isEmpty() || password.isEmpty()) {
-        qDebug() << "请填写账号和密码";
-        return;
-    }
     QSqlQuery query;
     query.prepare("SELECT password FROM users WHERE id = :id");
     query.bindValue(":id", id);
@@ -60,15 +56,13 @@ void LoginServer::on_loginButton_clicked()
     }
     if (!query.next()) {
         qDebug() << "账号不存在";
+        QMessageBox::information(this, "错误", "账号不存在");
         return;
     }
     QString storedPassword = query.value(0).toString();
     if (storedPassword != password) {
         qDebug() << "密码错误";
-        return;
-    }
-    if (!ui->checkBox->isChecked()) {
-        qDebug() << "请勾选同意条款";
+        QMessageBox::information(this, "错误", "密码错误");
         return;
     }
     if (!serverDialog) {

@@ -44,19 +44,6 @@ void EnrollDialog::on_enrollButton_clicked()
     QString password = ui->passwordEdit->text();
     QString confirmPassword = ui->confirmPasswordEdit->text();
 
-    if (id.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-        qDebug() << "请填写所有字段";
-        return;
-    }
-
-    if (password != confirmPassword) {
-        qDebug() << "两次输入的密码不一致";
-        return;
-    }
-    if (!ui->checkBox->isChecked()) {
-        qDebug() << "请勾选同意条款";
-        return;
-    }
     QSqlQuery query;
     query.prepare("INSERT INTO users (id, password) VALUES (:id, :password)");
     query.bindValue(":id", id);
