@@ -22,7 +22,8 @@ public:
     explicit UserDialog(const QString &id, QWidget *parent = nullptr);
     ~UserDialog();
     void setAvatar(const QString &avatarPath); // 添加接收头像路径的方法
-
+    void setNickName(const QString &nickName); // 添加接收昵称的方法
+    void setPersonalizedSignature(const QString &signature); // 添加接收个性签名的方法
 
 private:
     Ui::UserDialog *ui;

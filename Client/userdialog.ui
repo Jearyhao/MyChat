@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>559</height>
+    <height>471</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>300</height>
+    <height>471</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>300</width>
-    <height>1000</height>
+    <height>471</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -93,7 +93,7 @@ QTabBar::tab:first {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -114,6 +114,12 @@ QTabBar::tab:first {
          <height>471</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QListWidget {
+    border: none;
+    background: transparent;
+}</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="friendtab">
@@ -129,6 +135,12 @@ QTabBar::tab:first {
          <height>471</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QListWidget {
+    border: none;
+    background: transparent;
+}</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="spacetab">
@@ -143,6 +155,12 @@ QTabBar::tab:first {
          <width>281</width>
          <height>471</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QListWidget {
+    border: none;
+    background: transparent;
+}</string>
        </property>
       </widget>
      </widget>
