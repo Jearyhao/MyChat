@@ -52,6 +52,11 @@ void EnrollDialog::on_enrollButton_clicked()
         QMessageBox::information(this, "失败", "账号已存在");
         return;
     }
+    if(password != confirmPassword) {
+        qDebug() << "两次输入的密码不一致";
+        QMessageBox::information(this, "失败", "两次输入的密码不一致");
+        return;
+    }
     query.prepare("INSERT INTO users (id, password) VALUES (:id, :password)");
     query.bindValue(":id", id);
     query.bindValue(":password", password);
@@ -61,6 +66,7 @@ void EnrollDialog::on_enrollButton_clicked()
         QMessageBox::information(this, "成功", "账号创建成功");
     } else {
         qDebug() << "账号创建失败: " << query.lastError().text();
+        QMessageBox::information(this, "失败", "账号创建失败");
     }
 }
 void EnrollDialog::on_inputFieldsChanged()
