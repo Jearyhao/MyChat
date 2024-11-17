@@ -6,8 +6,9 @@
 #include <QSqlQuery>
 #include <QtSql>
 #include <QSqlError>
-#include <QDebug>
+
 #include <QMessageBox>
+
 namespace Ui {
 class ReviseDialog;
 }
@@ -22,8 +23,8 @@ public:
 
 private slots:
     void on_returnLoginButton_clicked();
+    void on_inputFieldsChanged(); // 添加槽函数声明
     void on_reviseButton_clicked();
-    void on_inputFieldsChanged();
 
 private:
     Ui::ReviseDialog *ui;

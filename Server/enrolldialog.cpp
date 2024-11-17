@@ -25,6 +25,7 @@ EnrollDialog::~EnrollDialog()
 }
 void EnrollDialog::on_returnLoginButton_clicked()
 {
+    ui->checkBox->setChecked(false); // 取消勾选
     ui->idEdit->clear();
     ui->passwordEdit->clear();
     ui->confirmPasswordEdit->clear();

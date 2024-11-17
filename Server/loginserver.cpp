@@ -73,6 +73,7 @@ void LoginServer::on_loginButton_clicked()
 }
 void LoginServer::on_enrollButton_clicked()
 {
+    ui->checkBox->setChecked(false); // 取消勾选
     ui->idEdit->clear();
     ui->passwordEdit->clear();
     if (!enrollDialog) {
@@ -84,6 +85,7 @@ void LoginServer::on_enrollButton_clicked()
 
 void LoginServer::on_revisePasswordButton_clicked()
 {
+    ui->checkBox->setChecked(false); // 取消勾选
     ui->idEdit->clear();
     ui->passwordEdit->clear();
     if (!reviseDialog) {
