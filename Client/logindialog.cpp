@@ -5,7 +5,8 @@ LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoginDialog),
     enrollDialog(new EnrollDialog(this)), // 初始化
-    reviseDialog(nullptr)
+    reviseDialog(nullptr),
+    userDialog(nullptr)
 {
     ui->setupUi(this);
     ui->idEdit->setPlaceholderText("请输入账号:");
@@ -53,4 +54,37 @@ void LoginDialog::on_revisePasswordButton_clicked()
     }
     reviseDialog->show(); // 显示ReviseDialog窗口
     this->hide(); // 隐藏当前LoginServer窗口
+}
+
+void LoginDialog::on_loginButton_clicked()
+{
+    QString id = ui->idEdit->text();
+    QString password = ui->passwordEdit->text();
+
+    // 检查数据库中是否存在相同的id
+    QSqlQuery query;
+    query.prepare("SELECT password FROM users WHERE id = :id");
+    query.bindValue(":id", id);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "错误", "查询数据库失败: " + query.lastError().text());
+        return;
+    }
+
+    if (!query.next()) {
+        QMessageBox::warning(this, "错误", "该账号不存在,请检查输入的ID");
+        return;
+    }
+
+    QString storedPassword = query.value(0).toString();
+    if (storedPassword != password) {
+        QMessageBox::warning(this, "错误", "密码错误,请重新输入");
+        return;
+    }
+
+    // 密码正确，跳转到 UserDialog 界面
+    if (!userDialog) {
+        userDialog = new UserDialog(id, this);
+    }
+    userDialog->show();
+    this->hide();
 }

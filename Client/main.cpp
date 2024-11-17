@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     db.setPort(26000); //opengauss端口号为26000
     bool flag = db.open();
     if (flag){
-        qDebug() << "连接数据成功";
+        qDebug() << "连接数据库成功";
     } else{
         qDebug() << "连接数据库失败";
     }

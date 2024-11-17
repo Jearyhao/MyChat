@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     clientdialog.cpp \
     revisedialog.cpp \
-    searchdialog.cpp
+    searchdialog.cpp \
+    userdialog.cpp
 
 HEADERS += \
     chatingdialog.h \
@@ -23,7 +24,8 @@ HEADERS += \
     enrolldialog.h \
     logindialog.h \
     revisedialog.h \
-    searchdialog.h
+    searchdialog.h \
+    userdialog.h
 
 FORMS += \
     chatingdialog.ui \
@@ -31,7 +33,8 @@ FORMS += \
     enrolldialog.ui \
     logindialog.ui \
     revisedialog.ui \
-    searchdialog.ui
+    searchdialog.ui \
+    userdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -48,3 +51,6 @@ DISTFILES += \
     clientdialog.o \
     main.o \
     moc_clientdialog.o
+
+RESOURCES += \
+    headPhoto.qrc

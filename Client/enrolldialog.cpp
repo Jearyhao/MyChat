@@ -1,6 +1,6 @@
 #include "enrolldialog.h"
 #include "ui_enrolldialog.h"
-
+#include <QRandomGenerator>
 EnrollDialog::EnrollDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EnrollDialog)
@@ -77,6 +77,9 @@ void EnrollDialog::on_enrollButton_clicked() {
         ui->confirmPasswordEdit->clear();
         return;
     }
+    // 随机选择一个头像
+    int randomIndex = QRandomGenerator::global()->bounded(1, 51); // 生成1到50之间的随机数
+    QString avatarPath = QString(":/headPhoto/%1.jpg").arg(randomIndex);
 
     // 插入新用户数据
     query.prepare("INSERT INTO users (nickname, id, password) VALUES (:nickname, :id, :password)");
@@ -88,6 +91,14 @@ void EnrollDialog::on_enrollButton_clicked() {
         return;
     }
 
+    // 插入用户头像数据到 user_headphoto 表
+    query.prepare("INSERT INTO user_headphoto (id, headphoto) VALUES (:id, :headphoto)");
+    query.bindValue(":id", id);
+    query.bindValue(":headphoto", avatarPath);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "错误", "插入头像数据失败: " + query.lastError().text());
+        return;
+    }
     QMessageBox::information(this, "成功", "注册成功！");
     this->close();
 }

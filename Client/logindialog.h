@@ -5,6 +5,7 @@
 #include "enrolldialog.h"
 #include "revisedialog.h"
 #include "clientdialog.h"
+#include "userdialog.h"
 #include <QDebug>
 
 #include <QSqlDatabase>
@@ -29,11 +30,14 @@ private slots:
     void on_revisePasswordButton_clicked();
     void updateLoginButtonState();
 
+    void on_loginButton_clicked();
+
 private:
     Ui::LoginDialog *ui;
     EnrollDialog *enrollDialog; // 成员变量
     ClientDialog *clentDialog;
     ReviseDialog *reviseDialog;
+    UserDialog *userDialog;
 };
 
 #endif // LOGINDIALOG_H
