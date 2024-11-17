@@ -51,4 +51,7 @@
         <file>headPhoto/49.jpg</file>
         <file>headPhoto/50.jpg</file>
     </qresource>
+    <qresource prefix="/n">
+        <file>background/background.jpg</file>
+    </qresource>
 </RCC>

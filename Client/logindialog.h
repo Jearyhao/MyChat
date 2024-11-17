@@ -12,7 +12,7 @@
 #include <QSqlQuery>
 #include <QtSql>
 #include <QSqlError>
-
+#include <QGraphicsDropShadowEffect>
 
 namespace Ui {
 class LoginDialog;

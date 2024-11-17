@@ -190,7 +190,7 @@
         </font>
        </property>
        <property name="text">
-        <string>CheckBox</string>
+        <string>已阅读并同意服务协议和QQ隐私保护指引</string>
        </property>
       </widget>
      </item>

@@ -13,7 +13,32 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui->passwordEdit->setPlaceholderText("请输入密码:");
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
     ui->loginButton->setEnabled(false);
+    // 设置背景图片和透明度
+    this->setStyleSheet("QDialog { background-image: url(:/n/background/background.jpg); background-repeat: no-repeat; background-position: center; }");
+    // 设置控件透明度为 75%
+    QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->idEdit->setGraphicsEffect(opacityEffect);
 
+    opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->passwordEdit->setGraphicsEffect(opacityEffect);
+
+    opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->loginButton->setGraphicsEffect(opacityEffect);
+
+    opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->checkBox->setGraphicsEffect(opacityEffect);
+
+    opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->enrollButton->setGraphicsEffect(opacityEffect);
+
+    opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.75);
+    ui->revisePasswordButton->setGraphicsEffect(opacityEffect);
     connect(ui->idEdit, &QLineEdit::textChanged, this, &LoginDialog::updateLoginButtonState);
     connect(ui->passwordEdit, &QLineEdit::textChanged, this, &LoginDialog::updateLoginButtonState);
     connect(ui->checkBox, &QCheckBox::stateChanged, this, &LoginDialog::updateLoginButtonState);
