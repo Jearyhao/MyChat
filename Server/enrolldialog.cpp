@@ -46,14 +46,23 @@ void EnrollDialog::on_enrollButton_clicked()
     QString confirmPassword = ui->confirmPasswordEdit->text();
 
     QSqlQuery query;
-    query.prepare("select * from users where id = :id");
+    query.prepare("select * from adminusers where id = :id");
     query.bindValue(":id", id);
     if (query.exec() && query.next()) {
         qDebug() << "账号已存在";
+        ui->idEdit->clear();
+        ui->passwordEdit->clear();
+        ui->confirmPasswordEdit->clear();
         QMessageBox::information(this, "失败", "账号已存在");
         return;
     }
-    query.prepare("INSERT INTO users (id, password) VALUES (:id, :password)");
+    // 检查密码是否一致
+    if (password != confirmPassword) {
+        QMessageBox::warning(this, "错误", "两次输入的密码不一致，请重新输入");
+        ui->confirmPasswordEdit->clear();
+        return;
+    }
+    query.prepare("INSERT INTO adminusers (id, password) VALUES (:id, :password)");
     query.bindValue(":id", id);
     query.bindValue(":password", password);
 

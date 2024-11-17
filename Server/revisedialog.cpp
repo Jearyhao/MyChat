@@ -50,7 +50,7 @@ void ReviseDialog::on_reviseButton_clicked()
     QString newPassword = ui->passwordEdit_2->text();
     QString confirmPassword = ui->confirmPasswordEdit_2->text();
     QSqlQuery query;
-    query.prepare("select * from users where id = :id");
+    query.prepare("select * from adminusers where id = :id");
     query.bindValue(":id", id);
     if (query.exec() && !query.next()) {
         qDebug() << "账号不存在";
@@ -59,10 +59,11 @@ void ReviseDialog::on_reviseButton_clicked()
     }
     if (newPassword != confirmPassword) {
         qDebug() << "两次输入的密码不一致";
+        ui->confirmPasswordEdit_2->clear();
         QMessageBox::information(this, "失败", "两次输入的密码不一致");
         return;
     }
-    query.prepare("SELECT id FROM users WHERE id = :id");
+    query.prepare("SELECT id FROM adminusers WHERE id = :id");
     query.bindValue(":id", id);
     if (!query.exec()) {
         qDebug() << "查询失败: " << query.lastError().text();
@@ -72,7 +73,7 @@ void ReviseDialog::on_reviseButton_clicked()
         qDebug() << "账号不存在";
         return;
     }
-    query.prepare("UPDATE users SET password = :password WHERE id = :id");
+    query.prepare("UPDATE adminusers SET password = :password WHERE id = :id");
     query.bindValue(":password", newPassword);
     query.bindValue(":id", id);
     if (query.exec()) {

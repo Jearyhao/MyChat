@@ -10,6 +10,9 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->idEdit->setPlaceholderText("请输入账号:");
     ui->passwordEdit->setPlaceholderText("请输入密码:");
+    ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    ui->loginButton->setEnabled(false);
+
     connect(ui->idEdit, &QLineEdit::textChanged, this, &LoginDialog::updateLoginButtonState);
     connect(ui->passwordEdit, &QLineEdit::textChanged, this, &LoginDialog::updateLoginButtonState);
     connect(ui->checkBox, &QCheckBox::stateChanged, this, &LoginDialog::updateLoginButtonState);
@@ -30,7 +33,6 @@ LoginDialog::~LoginDialog()
 
 void LoginDialog::on_enrollButton_clicked()
 {
-    qDebug() << "Enroll button clicked"; // 添加调试信息
     ui->checkBox->setChecked(false); // 取消勾选
     ui->idEdit->clear();
     ui->passwordEdit->clear();

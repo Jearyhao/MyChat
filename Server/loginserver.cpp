@@ -48,7 +48,7 @@ void LoginServer::on_loginButton_clicked()
     QString password = ui->passwordEdit->text();
 
     QSqlQuery query;
-    query.prepare("SELECT password FROM users WHERE id = :id");
+    query.prepare("SELECT password FROM adminusers WHERE id = :id");
     query.bindValue(":id", id);
     if (!query.exec()) {
         qDebug() << "查询失败: " << query.lastError().text();
@@ -62,6 +62,7 @@ void LoginServer::on_loginButton_clicked()
     QString storedPassword = query.value(0).toString();
     if (storedPassword != password) {
         qDebug() << "密码错误";
+        ui->passwordEdit->clear();
         QMessageBox::information(this, "错误", "密码错误");
         return;
     }
