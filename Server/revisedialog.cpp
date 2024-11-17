@@ -11,9 +11,20 @@ ReviseDialog::ReviseDialog(QWidget *parent) :
     ui->confirmPasswordEdit_2->setPlaceholderText("请确认新的密码:");
     ui->passwordEdit_2->setEchoMode(QLineEdit::Password);
     ui->confirmPasswordEdit_2->setEchoMode(QLineEdit::Password);
-    connect(ui->returnLoginButton_2, &QPushButton::clicked, this, &ReviseDialog::on_returnLoginButton_clicked);
-}
+    ui->reviseButton->setEnabled(false); // 初始时禁用修改按钮
 
+    connect(ui->returnLoginButton_2, &QPushButton::clicked, this, &ReviseDialog::on_returnLoginButton_clicked);
+    connect(ui->idEdit_2, &QLineEdit::textChanged, this, &ReviseDialog::on_inputFieldsChanged);
+    connect(ui->passwordEdit_2, &QLineEdit::textChanged, this, &ReviseDialog::on_inputFieldsChanged);
+    connect(ui->confirmPasswordEdit_2, &QLineEdit::textChanged, this, &ReviseDialog::on_inputFieldsChanged);
+}
+void ReviseDialog::on_inputFieldsChanged() //恢复修改密码按钮
+{
+    bool enableButton = !ui->idEdit_2->text().isEmpty() &&
+                        !ui->passwordEdit_2->text().isEmpty() &&
+                        !ui->confirmPasswordEdit_2->text().isEmpty();
+    ui->reviseButton->setEnabled(enableButton);
+}
 ReviseDialog::~ReviseDialog()
 {
     delete ui;

@@ -10,8 +10,13 @@ EnrollDialog::EnrollDialog(QWidget *parent) :
     ui->idEdit->setPlaceholderText("请输入id:");
     ui->passwordEdit->setPlaceholderText("请输入密码:");
     ui->confirmPasswordEdit->setPlaceholderText("请确认密码:");
+    ui->enrollButton->setEnabled(false); // 初始时禁用注册按钮
     //connect(ui->returnLoginButton, &QPushButton::clicked, this, &EnrollDialog::on_returnLoginButton_clicked);
     //connect(ui->enrollButton, &QPushButton::clicked, this, &EnrollDialog::on_enrollButton_clicked);
+    connect(ui->idEdit, &QLineEdit::textChanged, this, &EnrollDialog::on_inputFieldsChanged);
+    connect(ui->passwordEdit, &QLineEdit::textChanged, this, &EnrollDialog::on_inputFieldsChanged);
+    connect(ui->confirmPasswordEdit, &QLineEdit::textChanged, this, &EnrollDialog::on_inputFieldsChanged);
+    connect(ui->checkBox, &QCheckBox::stateChanged, this, &EnrollDialog::on_inputFieldsChanged);
 }
 
 EnrollDialog::~EnrollDialog()
@@ -63,4 +68,12 @@ void EnrollDialog::on_enrollButton_clicked()
     } else {
         qDebug() << "账号创建失败: " << query.lastError().text();
     }
+}
+void EnrollDialog::on_inputFieldsChanged()
+{
+    bool enableButton = !ui->idEdit->text().isEmpty() &&
+                        !ui->passwordEdit->text().isEmpty() &&
+                        !ui->confirmPasswordEdit->text().isEmpty() &&
+                        ui->checkBox->isChecked();
+    ui->enrollButton->setEnabled(enableButton);
 }

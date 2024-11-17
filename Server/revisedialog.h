@@ -22,8 +22,8 @@ public:
 
 private slots:
     void on_returnLoginButton_clicked();
-
     void on_reviseButton_clicked();
+    void on_inputFieldsChanged();
 
 private:
     Ui::ReviseDialog *ui;

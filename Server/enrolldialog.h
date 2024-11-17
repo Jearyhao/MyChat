@@ -21,8 +21,8 @@ public:
 
 private slots:
     void on_returnLoginButton_clicked();
-
     void on_enrollButton_clicked();
+    void on_inputFieldsChanged(); //恢复按钮
 
 private:
     Ui::EnrollDialog *ui;
