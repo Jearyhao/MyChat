@@ -7,6 +7,21 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     userId(id)
 {
     ui->setupUi(this);
+    // 创建一个 QMenu 对象
+    QMenu *menu = new QMenu(this);
+
+    // 向 QMenu 对象中添加 QAction
+    QAction *option1 = new QAction("修改昵称", this);
+    QAction *option2 = new QAction("修改头像", this);
+    QAction *option3 = new QAction("修改个性签名", this);
+
+    menu->addAction(option1);
+    menu->addAction(option2);
+    menu->addAction(option3);
+
+    // 将 QMenu 设置为 QToolButton 的菜单
+    ui->settingButton->setMenu(menu);
+    ui->settingButton->setPopupMode(QToolButton::InstantPopup);
     // 查询数据库，获取用户的头像路径
     QSqlQuery query;
     query.prepare("SELECT headphoto FROM user_headphoto WHERE id = :id");
@@ -47,6 +62,15 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
         setPersonalizedSignature("该用户很懒，还没有设置个性签名"); // 设置默认个性签名
     }*/
     setPersonalizedSignature("该用户很懒，还没有设置个性签名");
+    ui->tabWidget->setCurrentWidget(ui->chatingtab);
+    //创建好友列表
+    FriendItem *friendItem = new FriendItem();
+    friendItem->setHeadPhoto(":/headPhoto/11.jpg");
+    QListWidgetItem * m_Item = new QListWidgetItem(ui->chatinglistWidget);
+    //设置管理项，m_Item的宽高
+    m_Item->setSizeHint(QSize(281, 64));
+    //将自定义的Qwidget---friendItem，设置为m_Item的小部件
+    ui->chatinglistWidget->setItemWidget(m_Item, friendItem);
 }
 
 UserDialog::~UserDialog()
@@ -88,3 +112,4 @@ void UserDialog::setPersonalizedSignature(const QString &signature)
 {
     ui->personalizedSignatureEdit->setText(signature);
 }
+

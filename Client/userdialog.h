@@ -10,6 +10,9 @@
 #include <QMessageBox>
 #include <QPainterPath>
 #include <QPainter>
+#include "frienditem.h"
+#include <QMenu>
+#include <QAction>
 namespace Ui {
 class UserDialog;
 }
@@ -29,6 +32,8 @@ private:
     Ui::UserDialog *ui;
     QString userId; // 保存用户 ID
     QString avatarPath; // 保存头像路径
+
+
 };
 
 #endif // USERDIALOG_H

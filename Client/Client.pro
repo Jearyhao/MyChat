@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     chatingdialog.cpp \
     enrolldialog.cpp \
+    frienditem.cpp \
     logindialog.cpp \
     main.cpp \
     clientdialog.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     chatingdialog.h \
     clientdialog.h \
     enrolldialog.h \
+    frienditem.h \
     logindialog.h \
     revisedialog.h \
     searchdialog.h \
@@ -31,6 +33,7 @@ FORMS += \
     chatingdialog.ui \
     clientdialog.ui \
     enrolldialog.ui \
+    frienditem.ui \
     logindialog.ui \
     revisedialog.ui \
     searchdialog.ui \
