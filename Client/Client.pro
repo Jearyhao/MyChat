@@ -9,32 +9,38 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    addfrienddialog.cpp \
     chatingdialog.cpp \
     enrolldialog.cpp \
     frienditem.cpp \
     logindialog.cpp \
     main.cpp \
     clientdialog.cpp \
+    profiledialog.cpp \
     revisedialog.cpp \
     searchdialog.cpp \
     userdialog.cpp
 
 HEADERS += \
+    addfrienddialog.h \
     chatingdialog.h \
     clientdialog.h \
     enrolldialog.h \
     frienditem.h \
     logindialog.h \
+    profiledialog.h \
     revisedialog.h \
     searchdialog.h \
     userdialog.h
 
 FORMS += \
+    addfrienddialog.ui \
     chatingdialog.ui \
     clientdialog.ui \
     enrolldialog.ui \
     frienditem.ui \
     logindialog.ui \
+    profiledialog.ui \
     revisedialog.ui \
     searchdialog.ui \
     userdialog.ui
