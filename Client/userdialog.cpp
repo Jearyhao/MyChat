@@ -1,6 +1,6 @@
 #include "userdialog.h"
 #include "ui_userdialog.h"
-
+#include "friendlistdialog.h"
 UserDialog::UserDialog(const QString &id, QWidget *parent) :
     QDialog(parent, Qt::Window),
     ui(new Ui::UserDialog),
@@ -65,7 +65,9 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     m_Item->setSizeHint(QSize(281, 64));
     //将自定义的Qwidget---friendItem，设置为m_Item的小部件
     ui->chatinglistWidget->setItemWidget(m_Item, friendItem);
+    loadFriendList();
     ui->nikenameLabel->setFocus();
+
 }
 
 UserDialog::~UserDialog()
@@ -151,5 +153,53 @@ void UserDialog::setPersonalizedSignature(const QString &signature)
 {
     ui->personalizedSignatureEdit->setText(signature);
 }
+void UserDialog::loadFriendList()
+{
+    ui->friendlistWidget->clear(); // 清空好友列表
 
+    QSqlQuery query;
+    query.prepare("SELECT friend_id FROM relationship WHERE user_id = :user_id");
+    query.bindValue(":user_id", userId);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "错误", "查询好友列表失败: " + query.lastError().text());
+        return;
+    }
+
+    while (query.next()) {
+        QString friendId = query.value(0).toString();
+        qDebug() << "Friend ID:" << friendId;
+        QSqlQuery friendQuery;
+        friendQuery.prepare("SELECT nickname, headphoto, signature, online FROM users WHERE id = :id");
+        friendQuery.bindValue(":id", friendId);
+        if (!friendQuery.exec()) {
+            QMessageBox::critical(this, "错误", "查询好友信息失败: " + friendQuery.lastError().text());
+            continue;
+        }
+
+        if (friendQuery.next()) {
+            QString nickname = friendQuery.value("nickname").toString();
+            QString headphoto = friendQuery.value("headphoto").toString();
+            QString signature = friendQuery.value("signature").toString();
+            int online = friendQuery.value("online").toInt();
+            qDebug() << "Friend nickname:" << nickname;
+            qDebug() << "Friend headphoto:" << headphoto;
+            qDebug() << "Friend signature:" << signature;
+            qDebug() << "Friend online:" << online;
+            
+            QListWidgetItem *item = new QListWidgetItem(ui->friendlistWidget);
+            FriendListDialog *friendListItem = new FriendListDialog();
+            friendListItem->ui->nickNameLabel->setText(nickname);
+            friendListItem->ui->signatureLabel->setText(signature);
+            friendListItem->ui->onlineLabel->setText(online ? "在线" : "离线");
+
+            QPixmap pixmap(headphoto);
+            if (!pixmap.isNull()) {
+                friendListItem->ui->headPhotoLabel->setPixmap(pixmap.scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }
+            item->setSizeHint(QSize(281,64));
+            //item->setSizeHint(friendItem->sizeHint());
+            ui->friendlistWidget->setItemWidget(item, friendListItem);
+        }
+    }
+}
 

@@ -11,6 +11,7 @@
 #include <QPainterPath>
 #include <QPainter>
 #include "frienditem.h"
+#include "friendlistdialog.h"
 #include <QMenu>
 #include <QAction>
 #include "profiledialog.h"
@@ -30,11 +31,13 @@ public:
     void setAvatar(const QString &avatarPath); // 添加接收头像路径的方法
     void setNickName(const QString &nickName); // 添加接收昵称的方法
     void setPersonalizedSignature(const QString &signature); // 添加接收个性签名的方法
+    void loadFriendList();
 
 private slots:
     void onModifyProfile();
     void onAddFriend();
     void updateProfile(); // 添加槽函数声明
+
 private:
     Ui::UserDialog *ui;
     QString userId; // 保存用户 ID

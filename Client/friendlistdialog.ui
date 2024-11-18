@@ -47,7 +47,7 @@
     </size>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QWidget" name="">
@@ -65,14 +65,14 @@
       <item>
        <widget class="QLabel" name="nickNameLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>PushButton</string>
+         <string>聊天</string>
         </property>
        </widget>
       </item>
@@ -99,14 +99,14 @@
       <item>
        <widget class="QLabel" name="signatureLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="onlineLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>

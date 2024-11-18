@@ -2,7 +2,7 @@
 #define FRIENDLISTDIALOG_H
 
 #include <QDialog>
-
+#include "ui_friendlistdialog.h"
 namespace Ui {
 class FriendListDialog;
 }
@@ -14,9 +14,9 @@ class FriendListDialog : public QDialog
 public:
     explicit FriendListDialog(QWidget *parent = nullptr);
     ~FriendListDialog();
-
+    Ui::FriendListDialog *ui; // 将 ui 设为 public 以便在 UserDialog 中访问
 private:
-    Ui::FriendListDialog *ui;
+
 };
 
 #endif // FRIENDLISTDIALOG_H
