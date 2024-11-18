@@ -85,7 +85,7 @@ void UserDialog::onModifyProfile()
 void UserDialog::onAddFriend()
 {
     qDebug() << "onAddFriend called";
-    AddFriendDialog *addFriendDialog = new AddFriendDialog(this);
+    AddFriendDialog *addFriendDialog = new AddFriendDialog(userId, this);
     addFriendDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
     addFriendDialog->show();
 }
