@@ -34,7 +34,7 @@ public:
 private slots:
     void onModifyProfile();
     void onAddFriend();
-
+    void updateProfile(); // 添加槽函数声明
 private:
     Ui::UserDialog *ui;
     QString userId; // 保存用户 ID

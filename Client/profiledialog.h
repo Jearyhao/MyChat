@@ -23,6 +23,9 @@ public:
     explicit ProfileDialog(const QString &id, QWidget *parent = nullptr);
     ~ProfileDialog();
 
+signals:
+    void profileUpdated(); // 添加信号声明
+
 private slots:
     void on_uploadButton_clicked(); // 添加槽函数声明
 

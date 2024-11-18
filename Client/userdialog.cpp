@@ -78,6 +78,7 @@ void UserDialog::onModifyProfile()
     qDebug() << "onModifyProfile called";
     ProfileDialog *profileDialog = new ProfileDialog(userId, this);
     profileDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
+    connect(profileDialog, &ProfileDialog::profileUpdated, this, &UserDialog::updateProfile); // 连接信号到槽函数
     profileDialog->show();
 }
 
@@ -88,7 +89,27 @@ void UserDialog::onAddFriend()
     addFriendDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
     addFriendDialog->show();
 }
-
+void UserDialog::updateProfile()
+{
+    // 重新加载用户信息
+    QSqlQuery query;
+    query.prepare("SELECT headphoto, nickname, signature FROM users WHERE id = :id");
+    query.bindValue(":id", userId);
+    if (query.exec()) {
+        if (query.next()) {
+            QString avatarPath = query.value("headphoto").toString();
+            QString nickName = query.value("nickname").toString();
+            QString signature = query.value("signature").toString();
+            setAvatar(avatarPath);
+            setNickName(nickName);
+            setPersonalizedSignature(signature);
+        } else {
+            QMessageBox::warning(this, tr("错误"), tr("未找到用户信息"));
+        }
+    } else {
+        QMessageBox::warning(this, tr("错误"), tr("无法查询数据库: ") + query.lastError().text());
+    }
+}
 void UserDialog::setAvatar(const QString &avatarPath)
 {
     this->avatarPath = avatarPath;

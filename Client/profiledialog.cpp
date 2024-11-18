@@ -89,6 +89,7 @@ void ProfileDialog::updateUserInfoInDatabase(const QString &nickname, const QStr
         QMessageBox::warning(this, tr("错误"), tr("无法更新数据库: ") + query.lastError().text());
     } else {
         QMessageBox::information(this, tr("成功"), tr("用户信息已更新"));
+        emit profileUpdated(); // 发出信号，通知 UserDialog 更新资料
     }
 }
 
