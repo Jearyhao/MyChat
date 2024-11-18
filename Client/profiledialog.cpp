@@ -59,7 +59,7 @@ void ProfileDialog::saveImage(const QString &sourcePath, const QString &destPath
 {
     QFile sourceFile(sourcePath);
     if (!sourceFile.copy(destPath)) {
-        QMessageBox::warning(this, tr("错误"), tr("无法保存图片: ") + sourceFile.errorString());
+        //QMessageBox::warning(this, tr("错误"), tr("无法保存图片: ") + sourceFile.errorString());
     }
 }
 

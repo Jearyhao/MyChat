@@ -105,7 +105,14 @@ void LoginDialog::on_loginButton_clicked()
         QMessageBox::warning(this, "错误", "密码错误,请重新输入");
         return;
     }
-
+    // 更新用户的在线状态
+    query.prepare("UPDATE users SET online = 1 WHERE id = :id");
+    query.bindValue(":id", id);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "错误", "更新在线状态失败: " + query.lastError().text());
+        return;
+    }
+    
     // 密码正确，跳转到 UserDialog 界面
     if (!userDialog) {
         userDialog = new UserDialog(id, this);

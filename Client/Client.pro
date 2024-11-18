@@ -13,6 +13,7 @@ SOURCES += \
     chatingdialog.cpp \
     enrolldialog.cpp \
     frienditem.cpp \
+    friendlistdialog.cpp \
     logindialog.cpp \
     main.cpp \
     clientdialog.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     clientdialog.h \
     enrolldialog.h \
     frienditem.h \
+    friendlistdialog.h \
     logindialog.h \
     profiledialog.h \
     revisedialog.h \
@@ -39,6 +41,7 @@ FORMS += \
     clientdialog.ui \
     enrolldialog.ui \
     frienditem.ui \
+    friendlistdialog.ui \
     logindialog.ui \
     profiledialog.ui \
     revisedialog.ui \

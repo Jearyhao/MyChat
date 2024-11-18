@@ -70,6 +70,13 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
 
 UserDialog::~UserDialog()
 {
+    // 更新用户的在线状态为离线
+    QSqlQuery query;
+    query.prepare("UPDATE users SET online = 0 WHERE id = :id");
+    query.bindValue(":id", userId);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "错误", "更新在线状态失败: " + query.lastError().text());
+    }
     delete ui;
 
 }
