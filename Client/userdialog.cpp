@@ -185,7 +185,7 @@ void UserDialog::loadFriendList()
             qDebug() << "Friend headphoto:" << headphoto;
             qDebug() << "Friend signature:" << signature;
             qDebug() << "Friend online:" << online;
-            
+
             QListWidgetItem *item = new QListWidgetItem(ui->friendlistWidget);
             FriendListDialog *friendListItem = new FriendListDialog();
             friendListItem->ui->nickNameLabel->setText(nickname);
@@ -194,7 +194,21 @@ void UserDialog::loadFriendList()
 
             QPixmap pixmap(headphoto);
             if (!pixmap.isNull()) {
-                friendListItem->ui->headPhotoLabel->setPixmap(pixmap.scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                // 将头像缩放到指定大小
+                pixmap = pixmap.scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                // 创建一个透明的圆形 QPixmap
+                QPixmap circularPixmap(pixmap.size());
+                circularPixmap.fill(Qt::transparent);
+                QPainter painter(&circularPixmap);
+                painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿
+                // 创建一个圆形路径
+                QPainterPath path;
+                path.addEllipse(0, 0, pixmap.width(), pixmap.height());
+                // 裁剪为圆形
+                painter.setClipPath(path);
+                painter.drawPixmap(0, 0, pixmap);
+                // 设置圆形头像到标签
+                friendListItem->ui->headPhotoLabel->setPixmap(circularPixmap);
             }
             item->setSizeHint(QSize(281,64));
             //item->setSizeHint(friendItem->sizeHint());

@@ -106,7 +106,7 @@
       <item>
        <widget class="QLabel" name="onlineLabel">
         <property name="text">
-         <string/>
+         <string>11111</string>
         </property>
        </widget>
       </item>
