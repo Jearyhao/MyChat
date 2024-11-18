@@ -75,7 +75,7 @@ UserDialog::~UserDialog()
 void UserDialog::onModifyProfile()
 {
     qDebug() << "onModifyProfile called";
-    ProfileDialog *profileDialog = new ProfileDialog(this);
+    ProfileDialog *profileDialog = new ProfileDialog(userId, this);
     profileDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
     profileDialog->show();
 }
