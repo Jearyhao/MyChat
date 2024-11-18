@@ -65,6 +65,7 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     m_Item->setSizeHint(QSize(281, 64));
     //将自定义的Qwidget---friendItem，设置为m_Item的小部件
     ui->chatinglistWidget->setItemWidget(m_Item, friendItem);
+    ui->nikenameLabel->setFocus();
 }
 
 UserDialog::~UserDialog()
