@@ -2,7 +2,7 @@
 #include "ui_userdialog.h"
 
 UserDialog::UserDialog(const QString &id, QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::Window),
     ui(new Ui::UserDialog),
     userId(id)
 {
@@ -20,6 +20,9 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     // 将 QMenu 设置为 QToolButton 的菜单
     ui->settingButton->setMenu(menu);
     ui->settingButton->setPopupMode(QToolButton::InstantPopup);
+    // 连接 QAction 的 triggered 信号到槽函数
+    connect(option1, &QAction::triggered, this, &UserDialog::onModifyProfile);
+    connect(option2, &QAction::triggered, this, &UserDialog::onAddFriend);
     // 查询数据库，获取用户的头像路径
     QSqlQuery query;
     query.prepare("SELECT headphoto FROM users WHERE id = :id");
@@ -69,6 +72,22 @@ UserDialog::~UserDialog()
     delete ui;
 
 }
+void UserDialog::onModifyProfile()
+{
+    qDebug() << "onModifyProfile called";
+    ProfileDialog *profileDialog = new ProfileDialog(this);
+    profileDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
+    profileDialog->show();
+}
+
+void UserDialog::onAddFriend()
+{
+    qDebug() << "onAddFriend called";
+    AddFriendDialog *addFriendDialog = new AddFriendDialog(this);
+    addFriendDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
+    addFriendDialog->show();
+}
+
 void UserDialog::setAvatar(const QString &avatarPath)
 {
     this->avatarPath = avatarPath;
@@ -103,4 +122,5 @@ void UserDialog::setPersonalizedSignature(const QString &signature)
 {
     ui->personalizedSignatureEdit->setText(signature);
 }
+
 

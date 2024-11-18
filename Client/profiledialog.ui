@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ProfileDialog</class>
  <widget class="QDialog" name="ProfileDialog">
@@ -10,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>个人资料</string>
   </property>
  </widget>
  <resources/>

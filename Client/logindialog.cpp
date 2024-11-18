@@ -14,7 +14,7 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
     ui->loginButton->setEnabled(false);
     // 设置背景图片和透明度
-    this->setStyleSheet("QDialog { background-image: url(:/n/background/background.jpg); background-repeat: no-repeat; background-position: center; }");
+    //this->setStyleSheet("QDialog { background-image: url(:/n/background/background.jpg); background-repeat: no-repeat; background-position: center; }");
     // 设置控件透明度为 75%
     QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
     opacityEffect->setOpacity(0.75);

@@ -2,7 +2,7 @@
 #include "ui_enrolldialog.h"
 #include <QRandomGenerator>
 EnrollDialog::EnrollDialog(QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::Window),
     ui(new Ui::EnrollDialog)
 {
     ui->setupUi(this);

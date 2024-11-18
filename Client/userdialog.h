@@ -13,6 +13,9 @@
 #include "frienditem.h"
 #include <QMenu>
 #include <QAction>
+#include "profiledialog.h"
+#include "addfrienddialog.h"
+
 namespace Ui {
 class UserDialog;
 }
@@ -28,11 +31,14 @@ public:
     void setNickName(const QString &nickName); // 添加接收昵称的方法
     void setPersonalizedSignature(const QString &signature); // 添加接收个性签名的方法
 
+private slots:
+    void onModifyProfile();
+    void onAddFriend();
+
 private:
     Ui::UserDialog *ui;
     QString userId; // 保存用户 ID
     QString avatarPath; // 保存头像路径
-
 
 };
 

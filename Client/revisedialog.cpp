@@ -2,7 +2,7 @@
 #include "ui_revisedialog.h"
 
 ReviseDialog::ReviseDialog(QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::Window),
     ui(new Ui::ReviseDialog)
 {
     ui->setupUi(this);
