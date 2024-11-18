@@ -82,21 +82,20 @@ void EnrollDialog::on_enrollButton_clicked() {
     QString avatarPath = QString(":/headPhoto/%1.jpg").arg(randomIndex);
 
     // 插入新用户数据
-    query.prepare("INSERT INTO users (nickname, id, password) VALUES (:nickname, :id, :password)");
+    query.prepare("INSERT INTO users (nickname, id, password, headphoto, signature, sex, birthday, country, region, online) VALUES (:nickname, :id, :password, :headphoto, :signature, :sex, :birthday, :country, :region, :online)");
     query.bindValue(":nickname", nickName);
     query.bindValue(":id", id);
     query.bindValue(":password", password);
+    query.bindValue(":headphoto", avatarPath);
+    query.bindValue(":signature", "这个人很懒，什么都没有留下");
+    query.bindValue(":sex", "保密");
+    query.bindValue(":birthday", QDateTime(QDate(2000, 1, 1), QTime(0, 0, 0)));
+    query.bindValue(":country", "保密");
+    query.bindValue(":region", "保密");
+    query.bindValue(":online", 0);
+
     if (!query.exec()) {
         QMessageBox::critical(this, "错误", "插入数据失败: " + query.lastError().text());
-        return;
-    }
-
-    // 插入用户头像数据到 user_headphoto 表
-    query.prepare("INSERT INTO user_headphoto (id, headphoto) VALUES (:id, :headphoto)");
-    query.bindValue(":id", id);
-    query.bindValue(":headphoto", avatarPath);
-    if (!query.exec()) {
-        QMessageBox::critical(this, "错误", "插入头像数据失败: " + query.lastError().text());
         return;
     }
     QMessageBox::information(this, "成功", "注册成功！");

@@ -11,20 +11,18 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     QMenu *menu = new QMenu(this);
 
     // 向 QMenu 对象中添加 QAction
-    QAction *option1 = new QAction("修改昵称", this);
-    QAction *option2 = new QAction("修改头像", this);
-    QAction *option3 = new QAction("修改个性签名", this);
+    QAction *option1 = new QAction("修改资料", this);
+    QAction *option2 = new QAction("添加好友", this);
 
     menu->addAction(option1);
     menu->addAction(option2);
-    menu->addAction(option3);
 
     // 将 QMenu 设置为 QToolButton 的菜单
     ui->settingButton->setMenu(menu);
     ui->settingButton->setPopupMode(QToolButton::InstantPopup);
     // 查询数据库，获取用户的头像路径
     QSqlQuery query;
-    query.prepare("SELECT headphoto FROM user_headphoto WHERE id = :id");
+    query.prepare("SELECT headphoto FROM users WHERE id = :id");
     query.bindValue(":id", userId);
     query.exec();
     if (query.next()) {
@@ -43,25 +41,18 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     if (query.next()) {
         QString nickName = query.value(0).toString();
         setNickName(nickName); // 设置昵称
-    }// 查询数据库，获取用户的个性签名
-
-    /*query.prepare("SELECT signature FROM users WHERE id = :id");
+    }
+    // 查询数据库，获取用户的个性签名
+    query.prepare("SELECT signature FROM users WHERE id = :id");
     query.bindValue(":id", userId);
     if (!query.exec()) {
         QMessageBox::critical(this, "错误", "查询数据库失败: " + query.lastError().text());
         return;
     }
-
     if (query.next()) {
         QString signature = query.value(0).toString();
-        if (signature.isEmpty()) {
-            signature = "该用户很懒，还没有设置个性签名";
-        }
         setPersonalizedSignature(signature); // 设置个性签名
-    } else {
-        setPersonalizedSignature("该用户很懒，还没有设置个性签名"); // 设置默认个性签名
-    }*/
-    setPersonalizedSignature("该用户很懒，还没有设置个性签名");
+    }
     ui->tabWidget->setCurrentWidget(ui->chatingtab);
     //创建好友列表
     FriendItem *friendItem = new FriendItem();
