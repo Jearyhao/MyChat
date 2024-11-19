@@ -68,14 +68,38 @@ void ServerDialog::onReadyRead()
                 qDebug() << "Failed to insert message into database:" << query.lastError().text();
                 return;
             }
-
+            // 查询 sender_id 对应的 nickname
+            QString senderNickname;
+            query.prepare("SELECT nickname FROM users WHERE id = :id");
+            query.bindValue(":id", senderId);
+            if (query.exec() && query.next()) {
+                senderNickname = query.value(0).toString();
+            } else {
+                qDebug() << "Failed to get nickname for sender_id:" << senderId;
+                senderNickname = senderId; // 如果查询失败，使用 senderId 作为昵称
+            }
+            // 查询 receiver_id 对应的 nickname
+            QString receiverNickname;
+            query.prepare("SELECT nickname FROM users WHERE id = :id");
+            query.bindValue(":id", receiverId);
+            if (query.exec() && query.next()) {
+                receiverNickname = query.value(0).toString();
+            } else {
+                qDebug() << "Failed to get nickname for receiver_id:" << receiverId;
+                receiverNickname = receiverId; // 如果查询失败，使用 receiverId 作为昵称
+            }
+            // 替换 JSON 数据中的 id 为 nickname
+            json["sender_id"] = senderNickname;
+            json["receiver_id"] = receiverNickname;
+            QJsonDocument newDoc(json);
+            QByteArray newData = newDoc.toJson();
             // 检查是否存在与 friend_id 的连接
             if (socketHash.contains(receiverId)) {
                 QTcpSocket* receiverSocket = socketHash.value(receiverId);
                 qDebug() << "Forwarding message to receiver:" << receiverId;
-                receiverSocket->write(data);
+                receiverSocket->write(newData);
                 QTcpSocket* senderSocket = socketHash.value(senderId);
-                senderSocket->write(data);
+                senderSocket->write(newData);
             }
         }
     }
