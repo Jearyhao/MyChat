@@ -1,9 +1,10 @@
 #include "chatingdialog.h"
 #include "ui_chatingdialog.h"
 
-ChatingDialog::ChatingDialog(const QString &friendId, QWidget *parent) :
+ChatingDialog::ChatingDialog(const QString &userId, const QString &friendId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChatingDialog),
+    userId(userId),
     friendId(friendId),
     socket(new QTcpSocket(this))
 {
@@ -50,8 +51,10 @@ void ChatingDialog::on_sendButton_clicked()
     }
 
     QJsonObject json;
-    json["sender_id"] = friendId;
+    json["sender_id"] = userId;
+    json["receiver_id"] = friendId; // 假设 receiver_id 与 sender_id 相同
     json["message"] = message;
+    json["time"] = QDateTime::currentDateTime().toString(Qt::ISODate);
 
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();

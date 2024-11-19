@@ -13,7 +13,7 @@ class FriendListDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FriendListDialog(const QString &friendId, QWidget *parent = nullptr);
+    explicit FriendListDialog(const QString &userId, const QString &friendId, QWidget *parent = nullptr);
     ~FriendListDialog();
     Ui::FriendListDialog *ui; // 将 ui 设为 public 以便在 UserDialog 中访问
 private slots:
@@ -21,6 +21,7 @@ private slots:
 
 private:
     QString friendId;
+    QString userId;
 };
 
 #endif // FRIENDLISTDIALOG_H

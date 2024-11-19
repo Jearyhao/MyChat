@@ -40,13 +40,16 @@ void ServerDialog::onReadyRead()
         if (json.contains("sender_id") && json.contains("message")) {
             // 处理消息
             QString senderId = json["sender_id"].toString();
+            QString receiverId = json["receiver_id"].toString();
             QString message = json["message"].toString();
+            QString time = json["time"].toString();
+
 
             // 存储到数据库
             QSqlQuery query;
             query.prepare("INSERT INTO chatingrecords (sender_id, receiver_id, message) VALUES (:sender_id, :receiver_id, :message)");
             query.bindValue(":sender_id", senderId);
-            query.bindValue(":receiver_id", senderId); // 假设 receiver_id 与 sender_id 相同
+            query.bindValue(":receiver_id", receiverId); // 假设 receiver_id 与 sender_id 相同
             query.bindValue(":message", message);
             if (!query.exec()) {
                 qDebug() << "Failed to insert message into database:" << query.lastError().text();
