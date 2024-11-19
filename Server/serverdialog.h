@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 #include <QtSql>
 #include <QSqlError>
+#include <QHash>
 QT_BEGIN_NAMESPACE
 namespace Ui { class ServerDialog; }
 QT_END_NAMESPACE
@@ -24,7 +25,7 @@ public:
  
 private slots:
     //创建服务器按钮对应的槽函数
-    void on_createButton_clicked();
+    //void on_createButton_clicked();
     //响应客户端连接请求的槽函数
     void onNewConnection();
     //接收客户端消息的槽函数
@@ -37,5 +38,6 @@ private:
     quint16 port = 10086;//服务器端口
 
     QTimer timer;//定时器，用来判断tcpClientList中是否有套接字已经断开连接,有的话就关掉
+    QHash<QString, QTcpSocket*> socketHash;
 };
 #endif // SERVERDIALOG_H

@@ -5,6 +5,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QTcpSocket>
 namespace Ui {
 class ChatingDialog;
 }
@@ -24,8 +25,9 @@ private slots:
 private:
     Ui::ChatingDialog *ui;
     QString friendId;
-
+    QTcpSocket *socket;
     void loadFriendNickname();
+    void connectToServer();
 };
 
 #endif // CHATINGDIALOG_H

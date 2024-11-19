@@ -4,10 +4,12 @@
 ChatingDialog::ChatingDialog(const QString &friendId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChatingDialog),
-    friendId(friendId)
+    friendId(friendId),
+    socket(new QTcpSocket(this))
 {
     ui->setupUi(this);
     loadFriendNickname();
+    connectToServer();
 }
 
 ChatingDialog::~ChatingDialog()
@@ -15,7 +17,16 @@ ChatingDialog::~ChatingDialog()
     delete ui;
 }
 
-
+void ChatingDialog::connectToServer()
+{
+    socket->connectToHost("127.0.0.1", 10086);
+    if (socket->waitForConnected(3000)) {
+        qDebug() << "Connected to server";
+        socket->write(friendId.toUtf8());
+    } else {
+        qDebug() << "Connection failed"<< socket->errorString();
+    }
+}
 void ChatingDialog::loadFriendNickname()
 {
     // 查询数据库以获取好友的昵称
