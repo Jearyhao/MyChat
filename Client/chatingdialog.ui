@@ -73,9 +73,6 @@
        <item>
         <widget class="QListWidget" name="listWidget"/>
        </item>
-       <item>
-        <widget class="QListWidget" name="listWidget_2"/>
-       </item>
       </layout>
      </item>
      <item row="0" column="0">
