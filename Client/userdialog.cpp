@@ -187,7 +187,7 @@ void UserDialog::loadFriendList()
             qDebug() << "Friend online:" << online;
 
             QListWidgetItem *item = new QListWidgetItem(ui->friendlistWidget);
-            FriendListDialog *friendListItem = new FriendListDialog();
+            FriendListDialog *friendListItem = new FriendListDialog(friendId);
             friendListItem->ui->nickNameLabel->setText(nickname);
             friendListItem->ui->signatureLabel->setText(signature);
             friendListItem->ui->onlineLabel->setText(online ? "在线" : "离线");

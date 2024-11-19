@@ -91,7 +91,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="friendNameLabel">
          <property name="text">
           <string/>
          </property>
