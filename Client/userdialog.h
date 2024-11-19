@@ -16,7 +16,7 @@
 #include <QAction>
 #include "profiledialog.h"
 #include "addfrienddialog.h"
-
+#include <QTimer>
 namespace Ui {
 class UserDialog;
 }

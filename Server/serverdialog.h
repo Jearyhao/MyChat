@@ -29,15 +29,13 @@ private slots:
     void onNewConnection();
     //接收客户端消息的槽函数
     void onReadyRead();
-    //转发聊天消息给其他客户端
-    void sendMessage(const QByteArray& buf);
     //定时器到时后将执行的槽函数
     void onTimeout(void);
 private:
     Ui::ServerDialog *ui;
     QTcpServer tcpServer;
-    quint16 port;//服务器端口
-    QList<QTcpSocket*> tcpClientList;//容器：保存所有和客户端通信的套接字
+    quint16 port = 10086;//服务器端口
+
     QTimer timer;//定时器，用来判断tcpClientList中是否有套接字已经断开连接,有的话就关掉
 };
 #endif // SERVERDIALOG_H
