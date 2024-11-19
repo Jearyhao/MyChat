@@ -6,6 +6,8 @@
 #include <QSqlError>
 #include <QMessageBox>
 #include <QTcpSocket>
+#include <QJsonObject>
+#include <QJsonDocument>
 namespace Ui {
 class ChatingDialog;
 }

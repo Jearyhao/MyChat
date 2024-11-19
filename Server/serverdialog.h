@@ -11,6 +11,8 @@
 #include <QtSql>
 #include <QSqlError>
 #include <QHash>
+#include <QJsonObject>
+#include <QJsonDocument>
 QT_BEGIN_NAMESPACE
 namespace Ui { class ServerDialog; }
 QT_END_NAMESPACE

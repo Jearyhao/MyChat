@@ -41,8 +41,21 @@ void ChatingDialog::loadFriendNickname()
     }
 }
 
-
 void ChatingDialog::on_sendButton_clicked()
 {
+    QString message = ui->textEdit->toPlainText();
+    if (message.isEmpty()) {
+        QMessageBox::warning(this, "警告", "消息不能为空");
+        return;
+    }
 
+    QJsonObject json;
+    json["sender_id"] = friendId;
+    json["message"] = message;
+
+    QJsonDocument doc(json);
+    QByteArray data = doc.toJson();
+
+    socket->write(data);
+    ui->textEdit->clear();
 }

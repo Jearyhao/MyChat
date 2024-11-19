@@ -23,18 +23,6 @@ ServerDialog::~ServerDialog()
     delete ui;
 }
 
-/*//创建服务器按钮对应的槽函数
-void ServerDialog::on_createButton_clicked()
-{
-    //设置服务器IP和端口
-    if(tcpServer.listen(QHostAddress::Any, port) == true){
-        qDebug() << "创建服务器成功！";
-        //开启定时器
-        timer.start(3000);
-    } else{
-        qDebug() << "创建服务器失败!";
-    }
-}*/
 
 void ServerDialog::onNewConnection()
 {
@@ -46,10 +34,37 @@ void ServerDialog::onReadyRead()
     QTcpSocket* tcpClient = qobject_cast<QTcpSocket*>(sender());
     if (tcpClient) {
         QByteArray data = tcpClient->readAll();
-        QString userId = QString::fromUtf8(data);
-        if (!socketHash.contains(userId)) {
-            socketHash.insert(userId, tcpClient);
-            qDebug() << "User" << userId << "connected";
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        QJsonObject json = doc.object();
+
+        if (json.contains("sender_id") && json.contains("message")) {
+            // 处理消息
+            QString senderId = json["sender_id"].toString();
+            QString message = json["message"].toString();
+
+            // 存储到数据库
+            QSqlQuery query;
+            query.prepare("INSERT INTO chatingrecords (sender_id, receiver_id, message) VALUES (:sender_id, :receiver_id, :message)");
+            query.bindValue(":sender_id", senderId);
+            query.bindValue(":receiver_id", senderId); // 假设 receiver_id 与 sender_id 相同
+            query.bindValue(":message", message);
+            if (!query.exec()) {
+                qDebug() << "Failed to insert message into database:" << query.lastError().text();
+                return;
+            }
+
+            // 检查是否存在与 friend_id 的连接
+            if (socketHash.contains(senderId)) {
+                QTcpSocket* receiverSocket = socketHash.value(senderId);
+                receiverSocket->write(data);
+            }
+        } else {
+            // 处理用户 ID
+            QString userId = QString::fromUtf8(data);
+            if (!socketHash.contains(userId)) {
+                socketHash.insert(userId, tcpClient);
+                qDebug() << "User" << userId << "connected";
+            }
         }
     }
 }
