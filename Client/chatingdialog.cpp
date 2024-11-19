@@ -23,7 +23,6 @@ void ChatingDialog::connectToServer()
     socket->connectToHost("127.0.0.1", 10086);
     if (socket->waitForConnected(3000)) {
         qDebug() << "Connected to server";
-        socket->write(friendId.toUtf8());
     } else {
         qDebug() << "Connection failed"<< socket->errorString();
     }
