@@ -11,6 +11,7 @@ ChatingDialog::ChatingDialog(const QString &userId, const QString &friendId, QWi
     ui->setupUi(this);
     loadFriendNickname();
     connectToServer();
+    connect(socket, &QTcpSocket::readyRead, this, &ChatingDialog::onReadyRead);
 }
 
 ChatingDialog::~ChatingDialog()
@@ -23,8 +24,18 @@ void ChatingDialog::connectToServer()
     socket->connectToHost("127.0.0.1", 10086);
     if (socket->waitForConnected(3000)) {
         qDebug() << "Connected to server";
+        // 发送一条空数据
+        QJsonObject json;
+        json["sender_id"] = userId;
+        json["receiver_id"] = "";
+        json["message"] = "";
+        json["time"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+
+        QJsonDocument doc(json);
+        QByteArray data = doc.toJson();
+        socket->write(data);
     } else {
-        qDebug() << "Connection failed"<< socket->errorString();
+        qDebug() << "Connection failed" << socket->errorString();
     }
 }
 void ChatingDialog::loadFriendNickname()
@@ -60,4 +71,21 @@ void ChatingDialog::on_sendButton_clicked()
 
     socket->write(data);
     ui->textEdit->clear();
+}
+void ChatingDialog::onReadyRead()
+{
+    QByteArray data = socket->readAll();
+    qDebug() << "Received data:" << data;
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject json = doc.object();
+    qDebug() << "Received JSON data:" << doc.toJson(QJsonDocument::Indented);
+    if (json.contains("sender_id") && json.contains("message")) {
+        QString senderId = json["sender_id"].toString();
+        QString message = json["message"].toString();
+        QString time = json["time"].toString();
+        qDebug() << senderId << " " << message << " " << time << " ";
+        QString displayMessage = QString("[%1] %2: %3").arg(time, senderId, message);
+        ui->listWidget->addItem(displayMessage); // 将消息添加到 listWidget
+        ui->listWidget->scrollToBottom();
+    }
 }

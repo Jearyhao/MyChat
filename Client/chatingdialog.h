@@ -24,7 +24,7 @@ public:
 private slots:
 
     void on_sendButton_clicked();
-
+    void onReadyRead();
 private:
     Ui::ChatingDialog *ui;
     QString userId;

@@ -28,13 +28,15 @@ ServerDialog::~ServerDialog()
 void ServerDialog::onNewConnection()
 {
     QTcpSocket* tcpClient = tcpServer.nextPendingConnection();
-    connect(tcpClient, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    //connect(tcpClient, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    connect(tcpClient, &QTcpSocket::readyRead, this, &ServerDialog::onReadyRead);
 }
 void ServerDialog::onReadyRead()
 {
     QTcpSocket* tcpClient = qobject_cast<QTcpSocket*>(sender());
     if (tcpClient) {
         QByteArray data = tcpClient->readAll();
+        qDebug() << "Received data from client:" << data;
         QJsonDocument doc = QJsonDocument::fromJson(data);
         QJsonObject json = doc.object();
 
@@ -44,9 +46,17 @@ void ServerDialog::onReadyRead()
             QString receiverId = json["receiver_id"].toString();
             QString message = json["message"].toString();
             QString time = json["time"].toString();
-            qDebug() << senderId << " " << receiverId << " " << message << " " << time << " ";
-            qDebug() << "Received JSON data:" << doc.toJson(QJsonDocument::Indented);
 
+            //qDebug() << "Received JSON data:" << doc.toJson(QJsonDocument::Indented);
+            // 如果接收到的是空数据，则将客户端的 socket 存储到 Hash 表中
+            if (message.isEmpty() && receiverId.isEmpty()) {
+                if (!socketHash.contains(senderId)) {
+                    socketHash.insert(senderId, tcpClient);
+                    qDebug() << "User" << senderId << "connected";
+                }
+                return;
+            }
+            qDebug() << senderId << " " << receiverId << " " << message << " " << time << " ";
             // 存储到数据库
             QSqlQuery query;
             query.prepare("INSERT INTO chatingrecords (sender_id, receiver_id, message, time) VALUES (:sender_id, :receiver_id, :message, :time)");
@@ -60,16 +70,12 @@ void ServerDialog::onReadyRead()
             }
 
             // 检查是否存在与 friend_id 的连接
-            if (socketHash.contains(senderId)) {
-                QTcpSocket* receiverSocket = socketHash.value(senderId);
+            if (socketHash.contains(receiverId)) {
+                QTcpSocket* receiverSocket = socketHash.value(receiverId);
+                qDebug() << "Forwarding message to receiver:" << receiverId;
                 receiverSocket->write(data);
-            }
-        } else {
-            // 处理用户 ID
-            QString userId = QString::fromUtf8(data);
-            if (!socketHash.contains(userId)) {
-                socketHash.insert(userId, tcpClient);
-                qDebug() << "User" << userId << "connected";
+                QTcpSocket* senderSocket = socketHash.value(senderId);
+                senderSocket->write(data);
             }
         }
     }
