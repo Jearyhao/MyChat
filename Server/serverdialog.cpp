@@ -53,6 +53,8 @@ void ServerDialog::onReadyRead()
                 if (!socketHash.contains(senderId)) {
                     socketHash.insert(senderId, tcpClient);
                     qDebug() << "User" << senderId << "connected";
+                    // 在 listWidget 上显示登录信息
+                    ui->listWidget->addItem(QString("用户 %1 已登录").arg(senderId));
                 }
                 return;
             }
@@ -98,8 +100,11 @@ void ServerDialog::onReadyRead()
                 QTcpSocket* receiverSocket = socketHash.value(receiverId);
                 qDebug() << "Forwarding message to receiver:" << receiverId;
                 receiverSocket->write(newData);
+                // 同时将消息发送回发送者
                 QTcpSocket* senderSocket = socketHash.value(senderId);
                 senderSocket->write(newData);
+                // 在 listWidget 上显示消息转发信息
+                ui->listWidget->addItem(QString("%1 发送给 %2: %3").arg(senderNickname).arg(receiverNickname).arg(message));
             }
         }
     }

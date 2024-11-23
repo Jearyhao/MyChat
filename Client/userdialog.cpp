@@ -195,7 +195,7 @@ void UserDialog::loadFriendList()
             QPixmap pixmap(headphoto);
             if (!pixmap.isNull()) {
                 // 将头像缩放到指定大小
-                pixmap = pixmap.scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                pixmap = pixmap.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 // 创建一个透明的圆形 QPixmap
                 QPixmap circularPixmap(pixmap.size());
                 circularPixmap.fill(Qt::transparent);
@@ -210,7 +210,7 @@ void UserDialog::loadFriendList()
                 // 设置圆形头像到标签
                 friendListItem->ui->headPhotoLabel->setPixmap(circularPixmap);
             }
-            item->setSizeHint(QSize(281,64));
+            item->setSizeHint(QSize(604, 100));
             //item->setSizeHint(friendItem->sizeHint());
             ui->friendlistWidget->setItemWidget(item, friendListItem);
         }
