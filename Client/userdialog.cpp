@@ -56,15 +56,6 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
         QString signature = query.value(0).toString();
         setPersonalizedSignature(signature); // 设置个性签名
     }
-    //ui->tabWidget->setCurrentWidget(ui->chatingtab)
-    //创建好友列表
-    /*FriendItem *friendItem = new FriendItem();
-    friendItem->setHeadPhoto(":/headPhoto/11.jpg");
-    QListWidgetItem * m_Item = new QListWidgetItem(ui->chatinglistWidget);
-    //设置管理项，m_Item的宽高
-    m_Item->setSizeHint(QSize(281, 64));
-    //将自定义的Qwidget---friendItem，设置为m_Item的小部件
-    ui->chatinglistWidget->setItemWidget(m_Item, friendItem);*/
     loadFriendList();
     ui->nikenameLabel->setFocus();
 
