@@ -39,7 +39,52 @@ void ServerDialog::onReadyRead()
         qDebug() << "Received data from client:" << data;
         QJsonDocument doc = QJsonDocument::fromJson(data);
         QJsonObject json = doc.object();
+        if (json.contains("kind")) {
+            QString kind = json["kind"].toString();
 
+            if (kind == "chatingrecord") {
+                // 获取请求者的 id 和 friend_id
+                QString userId = json["id"].toString();
+                QString friendId = json["friend_id"].toString();
+
+                // 查询聊天记录
+                QSqlQuery query;
+                query.prepare("SELECT sender_id, receiver_id, message, time FROM chatingrecords WHERE \
+                              (sender_id = :userId AND receiver_id = :friendId) OR \
+                              (sender_id = :friendId AND receiver_id = :userId) \
+                              ORDER BY time ASC");
+                query.bindValue(":userId", userId);
+                query.bindValue(":friendId", friendId);
+
+                QJsonArray recordsArray;
+
+                if (query.exec()) {
+                    while (query.next()) {
+                        QJsonObject record;
+                        record["sender_id"] = query.value("sender_id").toString();
+                        record["receiver_id"] = query.value("receiver_id").toString();
+                        record["message"] = query.value("message").toString();
+                        record["time"] = query.value("time").toString();
+
+                        recordsArray.append(record);
+                    }
+                } else {
+                    qDebug() << "Failed to query chat records:" << query.lastError().text();
+                }
+
+                // 构造返回给客户端的 JSON 数据
+                QJsonObject responseJson;
+                responseJson["kind"] = "chatingrecord_response";
+                responseJson["records"] = recordsArray;
+
+                QJsonDocument responseDoc(responseJson);
+                QByteArray responseData = responseDoc.toJson();
+
+                // 发送数据给客户端
+                tcpClient->write(responseData);
+            }
+            // 其他 kind 的处理...
+        }
         if (json.contains("sender_id") && json.contains("message")) {
             // 处理消息
             QString senderId = json["sender_id"].toString();
