@@ -30,6 +30,10 @@ void ServerDialog::onNewConnection()
     QTcpSocket* tcpClient = tcpServer.nextPendingConnection();
     //connect(tcpClient, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(tcpClient, &QTcpSocket::readyRead, this, &ServerDialog::onReadyRead);
+    // 可以在此处为每个新连接生成一个唯一标识符，或者要求客户端先发送身份信息
+    // 这里简化处理，直接存储连接
+    QString clientKey = QString::number((quintptr)tcpClient);
+    socketHash.insert(clientKey, tcpClient);
 }
 void ServerDialog::onReadyRead()
 {
