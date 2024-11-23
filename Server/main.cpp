@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    LoginServer w;
+    ServerDialog w;
     w.show();
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
     db.setHostName("127.0.0.1");//你的IP地址
