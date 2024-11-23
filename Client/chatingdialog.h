@@ -1,6 +1,6 @@
 #ifndef CHATINGDIALOG_H
 #define CHATINGDIALOG_H
-
+#include "chatingrecorddialog.h"
 #include <QDialog>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -25,6 +25,8 @@ private slots:
 
     void on_sendButton_clicked();
     void onReadyRead();
+    void on_pushButton_clicked();
+
 private:
     Ui::ChatingDialog *ui;
     QString userId;

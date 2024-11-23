@@ -89,3 +89,11 @@ void ChatingDialog::onReadyRead()
         ui->listWidget->scrollToBottom();
     }
 }
+
+void ChatingDialog::on_pushButton_clicked()
+{
+    // 创建 ChatingRecordDialog 对象
+    ChatingRecordDialog *recordDialog = new ChatingRecordDialog(this);
+    // 显示对话框
+    recordDialog->show();
+}

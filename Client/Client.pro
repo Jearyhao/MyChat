@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     addfrienddialog.cpp \
     chatingdialog.cpp \
+    chatingrecorddialog.cpp \
     enrolldialog.cpp \
     frienditem.cpp \
     friendlistdialog.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 HEADERS += \
     addfrienddialog.h \
     chatingdialog.h \
+    chatingrecorddialog.h \
     clientdialog.h \
     enrolldialog.h \
     frienditem.h \
@@ -38,6 +40,7 @@ HEADERS += \
 FORMS += \
     addfrienddialog.ui \
     chatingdialog.ui \
+    chatingrecorddialog.ui \
     clientdialog.ui \
     enrolldialog.ui \
     frienditem.ui \
