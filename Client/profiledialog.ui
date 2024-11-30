@@ -122,6 +122,11 @@
            <height>35</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
         </widget>
        </item>
       </layout>
@@ -214,6 +219,11 @@
            <height>35</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
         </widget>
        </item>
       </layout>
@@ -295,6 +305,11 @@
            <height>35</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
         </widget>
        </item>
       </layout>
@@ -322,6 +337,11 @@
            <height>35</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
         </widget>
        </item>
       </layout>
@@ -348,6 +368,11 @@
            <width>16777215</width>
            <height>35</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
          </property>
         </widget>
        </item>

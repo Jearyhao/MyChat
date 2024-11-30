@@ -7,15 +7,32 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     userId(id)
 {
     ui->setupUi(this);
+
+    // 创建套接字并连接到服务器
+    tcpSocket = new QTcpSocket(this);
+    tcpSocket->connectToHost("127.0.0.1", 12345); // 请替换为您的服务器 IP 和端口
+
+    // 连接信号和槽，处理服务器返回的数据
+    connect(tcpSocket, &QTcpSocket::readyRead, this, &UserDialog::onReadyRead);
+
+    // 发送登录消息
+    QJsonObject loginJson;
+    loginJson["kind"] = "login";
+    loginJson["id"] = userId;
+    QJsonDocument loginDoc(loginJson);
+    tcpSocket->write(loginDoc.toJson());
+
     // 创建一个 QMenu 对象
     QMenu *menu = new QMenu(this);
 
     // 向 QMenu 对象中添加 QAction
     QAction *option1 = new QAction("修改资料", this);
     QAction *option2 = new QAction("添加好友", this);
+    QAction *option3 = new QAction("刷新一下", this);
 
     menu->addAction(option1);
     menu->addAction(option2);
+    menu->addAction(option3);
 
     // 将 QMenu 设置为 QToolButton 的菜单
     ui->settingButton->setMenu(menu);
@@ -23,6 +40,7 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
     // 连接 QAction 的 triggered 信号到槽函数
     connect(option1, &QAction::triggered, this, &UserDialog::onModifyProfile);
     connect(option2, &QAction::triggered, this, &UserDialog::onAddFriend);
+    connect(option3, &QAction::triggered, this, &UserDialog::onRefresh);
     // 查询数据库，获取用户的头像路径
     QSqlQuery query;
     query.prepare("SELECT headphoto FROM users WHERE id = :id");
@@ -56,8 +74,14 @@ UserDialog::UserDialog(const QString &id, QWidget *parent) :
         QString signature = query.value(0).toString();
         setPersonalizedSignature(signature); // 设置个性签名
     }
+    // 隐藏 QListWidget 的滚动条
+    ui->friendlistWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->friendlistWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // 加载好友列表
     loadFriendList();
     ui->nikenameLabel->setFocus();
+    // 滚动到顶部
+    ui->friendlistWidget->scrollToTop();
 
 }
 
@@ -85,9 +109,16 @@ void UserDialog::onModifyProfile()
 void UserDialog::onAddFriend()
 {
     qDebug() << "onAddFriend called";
-    AddFriendDialog *addFriendDialog = new AddFriendDialog(userId, this);
+    AddFriendDialog *addFriendDialog = new AddFriendDialog(userId, tcpSocket, this);
     addFriendDialog->setAttribute(Qt::WA_DeleteOnClose); // 确保对话框关闭时自动删除
+    // 连接 AddFriendDialog 的 friendAdded 信号到 UserDialog 的 loadFriendList 槽函数
+    connect(addFriendDialog, &AddFriendDialog::friendAdded, this, &UserDialog::loadFriendList);
     addFriendDialog->show();
+}
+void UserDialog::onRefresh()
+{
+
+    loadFriendList();
 }
 void UserDialog::updateProfile()
 {
@@ -206,5 +237,37 @@ void UserDialog::loadFriendList()
             ui->friendlistWidget->setItemWidget(item, friendListItem);
         }
     }
+    // 滚动到顶部
+    ui->friendlistWidget->scrollToTop();
 }
 
+void UserDialog::onReadyRead()
+{
+    QByteArray data = tcpSocket->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject json = doc.object();
+
+    if (json.contains("kind")) {
+        QString kind = json["kind"].toString();
+
+        // 处理好友列表更新通知
+        if (kind == "friendlist_updated") {
+            // 刷新好友列表
+            loadFriendList();
+        }
+
+        // 处理添加好友的响应
+        else if (kind == "addfriend_response") {
+            QString status = json["status"].toString();
+            QString message = json["message"].toString();
+
+            if (status == "success") {
+                QMessageBox::information(this, tr("成功"), tr("添加好友成功"));
+            } else {
+                QMessageBox::warning(this, tr("失败"), message);
+            }
+        }
+
+        // 处理其他 kind ...
+    }
+}

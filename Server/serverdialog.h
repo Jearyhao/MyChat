@@ -34,6 +34,7 @@ private slots:
     void onReadyRead();
     //定时器到时后将执行的槽函数
     void onTimeout(void);
+    void onClientDisconnected();
 private:
     Ui::ServerDialog *ui;
     QTcpServer tcpServer;

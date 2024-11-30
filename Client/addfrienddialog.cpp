@@ -1,10 +1,11 @@
 #include "addfrienddialog.h"
 #include "ui_addfrienddialog.h"
 #include <QDebug>
-AddFriendDialog::AddFriendDialog(const QString &id, QWidget *parent) :
+AddFriendDialog::AddFriendDialog(const QString &id, QTcpSocket *socket, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddFriendDialog),
-    userId(id) // 正确初始化 userId
+    userId(id),
+    tcpSocket(socket)
 {
     ui->setupUi(this);
 }
@@ -72,4 +73,15 @@ void AddFriendDialog::on_addFriendButton_clicked()
     }
 
     QMessageBox::information(this, tr("成功"), tr("添加好友成功"));
+    // 构造添加好友的请求
+    QJsonObject json;
+    json["kind"] = "addfriend";
+    json["user_id"] = userId;
+    json["friend_id"] = friendId;
+    QJsonDocument doc(json);
+
+    // 发送请求到服务器
+    tcpSocket->write(doc.toJson());
+    // 发射 friendAdded() 信号
+    emit friendAdded();
 }

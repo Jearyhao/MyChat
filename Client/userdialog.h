@@ -17,6 +17,7 @@
 #include "profiledialog.h"
 #include "addfrienddialog.h"
 #include <QTimer>
+#include <QTcpSocket>
 namespace Ui {
 class UserDialog;
 }
@@ -37,12 +38,14 @@ private slots:
     void onModifyProfile();
     void onAddFriend();
     void updateProfile(); // 添加槽函数声明
+    void onReadyRead();
+    void onRefresh();
 
 private:
     Ui::UserDialog *ui;
     QString userId; // 保存用户 ID
     QString avatarPath; // 保存头像路径
-
+    QTcpSocket *tcpSocket;
 };
 
 #endif // USERDIALOG_H

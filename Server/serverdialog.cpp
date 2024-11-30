@@ -30,10 +30,7 @@ void ServerDialog::onNewConnection()
     QTcpSocket* tcpClient = tcpServer.nextPendingConnection();
     //connect(tcpClient, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(tcpClient, &QTcpSocket::readyRead, this, &ServerDialog::onReadyRead);
-    // 可以在此处为每个新连接生成一个唯一标识符，或者要求客户端先发送身份信息
-    // 这里简化处理，直接存储连接
-    QString clientKey = QString::number((quintptr)tcpClient);
-    socketHash.insert(clientKey, tcpClient);
+    connect(tcpClient, &QTcpSocket::disconnected, this, &ServerDialog::onClientDisconnected);
 }
 void ServerDialog::onReadyRead()
 {
@@ -45,6 +42,102 @@ void ServerDialog::onReadyRead()
         QJsonObject json = doc.object();
         if (json.contains("kind")) {
             QString kind = json["kind"].toString();
+
+            // 处理用户登录，记录用户ID和套接字的映射
+            if (kind == "login") {
+                QString userId = json["id"].toString();
+                socketHash[userId] = tcpClient;
+
+                // 在 listWidget 上显示登录信息
+                //ui->listWidget->addItem(QString("用户 %1 已登录").arg(userId));
+
+                return;
+            }
+
+            // 处理添加好友请求
+            if (kind == "addfriend") {
+                QString userId = json["user_id"].toString();
+                QString friendId = json["friend_id"].toString();
+
+                // 执行添加好友的逻辑，更新数据库
+                QSqlQuery query;
+                // 检查用户是否已经存在好友关系
+                query.prepare("SELECT relationship_id FROM relationship WHERE user_id = :user_id AND friend_id = :friend_id");
+                query.bindValue(":user_id", userId);
+                query.bindValue(":friend_id", friendId);
+                if (!query.exec()) {
+                    qDebug() << "查询好友关系失败：" << query.lastError().text();
+                    // 向请求方发送失败消息
+                    QJsonObject response;
+                    response["kind"] = "addfriend_response";
+                    response["status"] = "failed";
+                    response["message"] = "查询好友关系失败";
+                    QJsonDocument responseDoc(response);
+                    tcpClient->write(responseDoc.toJson());
+                    return;
+                }
+
+                if (query.next()) {
+                    // 已经是好友关系
+                    QJsonObject response;
+                    response["kind"] = "addfriend_response";
+                    response["status"] = "failed";
+                    response["message"] = "你们已经是好友关系";
+                    QJsonDocument responseDoc(response);
+                    tcpClient->write(responseDoc.toJson());
+                    return;
+                }
+
+                // 插入好友关系
+                query.prepare("INSERT INTO relationship (user_id, friend_id) VALUES (:user_id, :friend_id)");
+                query.bindValue(":user_id", userId);
+                query.bindValue(":friend_id", friendId);
+                if (!query.exec()) {
+                    qDebug() << "添加好友失败：" << query.lastError().text();
+                    // 向请求方发送失败消息
+                    QJsonObject response;
+                    response["kind"] = "addfriend_response";
+                    response["status"] = "failed";
+                    response["message"] = "添加好友失败";
+                    QJsonDocument responseDoc(response);
+                    tcpClient->write(responseDoc.toJson());
+                } else {
+                    // 添加好友的逆向关系
+                    query.prepare("INSERT INTO relationship (user_id, friend_id) VALUES (:user_id, :friend_id)");
+                    query.bindValue(":user_id", friendId);
+                    query.bindValue(":friend_id", userId);
+                    if (!query.exec()) {
+                        qDebug() << "添加好友失败：" << query.lastError().text();
+                    } else {
+                        // 向请求方发送成功消息
+                        QJsonObject response;
+                        response["kind"] = "addfriend_response";
+                        response["status"] = "success";
+                        QJsonDocument responseDoc(response);
+                        tcpClient->write(responseDoc.toJson());
+
+                        // 通知双方刷新好友列表
+                        QJsonObject notify;
+                        notify["kind"] = "friendlist_updated";
+                        QJsonDocument notifyDoc(notify);
+                        QByteArray notifyData = notifyDoc.toJson();
+
+                        // 通知请求方
+                        if (socketHash.contains(userId)) {
+                            socketHash[userId]->write(notifyData);
+                        }
+
+                        // 通知被添加的好友（如果在线）
+                        if (socketHash.contains(friendId)) {
+                            socketHash[friendId]->write(notifyData);
+                        } else {
+                            qDebug() << "好友" << friendId << "未在线，无法发送好友列表更新通知";
+                        }
+                    }
+                }
+
+                return;
+            }
 
             if (kind == "chatingrecord") {
                 // 获取请求者的 id 和 friend_id
@@ -103,7 +196,7 @@ void ServerDialog::onReadyRead()
                     socketHash.insert(senderId, tcpClient);
                     qDebug() << "User" << senderId << "connected";
                     // 在 listWidget 上显示登录信息
-                    ui->listWidget->addItem(QString("用户 %1 已登录").arg(senderId));
+                    //ui->listWidget->addItem(QString("用户 %1 已登录").arg(senderId));
                 }
                 return;
             }
@@ -174,5 +267,24 @@ void ServerDialog::onTimeout()
         } else {
             ++it;
         }
+    }
+}
+void ServerDialog::onClientDisconnected()
+{
+    QTcpSocket* tcpClient = qobject_cast<QTcpSocket*>(sender());
+    if (tcpClient) {
+        QString userId;
+        // 查找对应的用户 ID
+        foreach (const QString &key, socketHash.keys()) {
+            if (socketHash.value(key) == tcpClient) {
+                userId = key;
+                break;
+            }
+        }
+        if (!userId.isEmpty()) {
+            socketHash.remove(userId);
+            qDebug() << "用户" << userId << "已断开连接";
+        }
+        tcpClient->deleteLater();
     }
 }
